@@ -1,6 +1,6 @@
 # **Verifiable Claim Lexicon for ATProtocol**
 
-### **Draft Specification — February 2025**
+### **Draft Specification — December 2025**
 
 ---
 

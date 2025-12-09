@@ -1,6 +1,6 @@
 # 📘 **AppView Indexing Guide for `community.claim` + Attestations**
 
-### **For ATProtocol Implementers — Draft, February 2025**
+### **For ATProtocol Implementers — Draft, December 2025**
 
 ---
 
