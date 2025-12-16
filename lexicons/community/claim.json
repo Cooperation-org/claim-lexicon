@@ -1,0 +1,141 @@
+{
+  "lexicon": 1,
+  "id": "community.claim",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "description": "A LinkedClaim-style verifiable claim record. Claims are immutable, signed assertions about any URI-addressable subject.",
+      "record": {
+        "type": "object",
+        "required": ["subject", "claimType", "createdAt"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "uri",
+            "description": "The entity this claim is about. Can be any URI: https URL, DID, AT-URI (for claims-about-claims), IPFS CID, etc."
+          },
+          "claimType": {
+            "type": "string",
+            "description": "Category of claim: skill, credential, impact, endorsement, dispute, rating, review, membership, etc."
+          },
+          "object": {
+            "type": "string",
+            "description": "Optional object of the claim (e.g., skill name, rating value, credential type)."
+          },
+          "statement": {
+            "type": "string",
+            "maxLength": 10000,
+            "description": "Human-readable explanation of the claim."
+          },
+          "source": {
+            "type": "ref",
+            "ref": "#claimSource",
+            "description": "Structured evidence/provenance for this claim."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When this record was created."
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When the claim became/becomes true (may differ from createdAt)."
+          },
+          "embeddedProof": {
+            "type": "ref",
+            "ref": "#embeddedProof",
+            "description": "For claims signed by external methods (MetaMask, aca-py, Digital Bazaar, etc.) before being published to ATProto."
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Signer's confidence in this claim (0-1)."
+          },
+          "stars": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Star rating (for rating-type claims)."
+          }
+        }
+      }
+    },
+    "claimSource": {
+      "type": "object",
+      "description": "Structured provenance/evidence for a claim. Based on cooperation.org/credentials/v1 ClaimSource vocabulary.",
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri",
+          "description": "URI of the evidence (URL, IPFS CID, AT-URI, etc.)."
+        },
+        "digestMultibase": {
+          "type": "string",
+          "description": "Multibase-encoded hash of the evidence content for integrity verification (e.g., zQm...)."
+        },
+        "howKnown": {
+          "type": "string",
+          "knownValues": [
+            "FIRST_HAND",
+            "SECOND_HAND",
+            "WEB_DOCUMENT",
+            "VERIFIED_LOGIN",
+            "SIGNED_DOCUMENT",
+            "BLOCKCHAIN",
+            "RESEARCH",
+            "OPINION",
+            "OTHER"
+          ],
+          "description": "How the signer knows this claim to be true."
+        },
+        "dateObserved": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the evidence was observed/collected."
+        },
+        "author": {
+          "type": "string",
+          "format": "uri",
+          "description": "Original author of the evidence (if different from claim signer)."
+        },
+        "curator": {
+          "type": "string",
+          "format": "uri",
+          "description": "Entity that curated/surfaced this evidence."
+        }
+      }
+    },
+    "embeddedProof": {
+      "type": "object",
+      "description": "Cryptographic proof from external signing methods. Allows claims signed via MetaMask, aca-py, Digital Bazaar, etc. to be published on ATProto while preserving the original signer identity.",
+      "required": ["type", "verificationMethod", "proofValue", "created"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Signature suite type (e.g., EthereumEip712Signature2021, Ed25519Signature2020, JsonWebSignature2020)."
+        },
+        "verificationMethod": {
+          "type": "string",
+          "description": "DID or key identifier of the actual claim signer (e.g., did:pkh:eip155:1:0xABC..., did:key:z6Mk..., did:web:example.com)."
+        },
+        "proofValue": {
+          "type": "string",
+          "description": "The signature value (format depends on type)."
+        },
+        "proofPurpose": {
+          "type": "string",
+          "default": "assertionMethod",
+          "description": "Purpose of the proof (typically assertionMethod for claims)."
+        },
+        "created": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the signature was created."
+        }
+      }
+    }
+  }
+}
